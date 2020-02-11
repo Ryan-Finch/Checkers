@@ -28,11 +28,17 @@ const moves ={
     redMove: {
         x:[-1, -1],
         y:[-1, 1]},
-    redJump: [[-2,-2],[-2,2]],
+    redJump: {
+        x: [1,1],
+        y: [1,-1]
+    },
     blackMove: {
         x: [1,1],
         y: [1,-1]},
-    blackJump: [[2, 2],[2,-2]],
+    blackJump: {
+        x:[-1, -1],
+        y:[-1, 1]
+    },
     kingMove: [[1,1],[1,-1],[-1,-1],[-1,1]],
     kingJump: [[2,2],[2,-2],[-2,-2], [-2,2],]
 }
@@ -67,18 +73,27 @@ document.querySelector('button').addEventListener('click', play);
 function checkerSelection(evt){
     let target = evt.target;
     evt.stopImmediatePropagation();
-    if(target.attributes.player.value !== playerTurn) return
+
     console.log(target)
+    
+    if((target.attributes.player.value !== playerTurn) && (pieceSelected === true)){
+        jump(target,selectedPieceArray);
+        render();
+        return;
+    }else if(pieceSelected === true){
+        return
+    }
     selectedPieceArray.push(target)
     pieceSelected = true;
     console.log(selectedPieceArray)
+    
 }
+
 function selectSquare(evt){
     let targetSquare = evt.target;
     let targetPiece = selectedPieceArray[0];
- 
     if(pieceSelected === false) return
-
+    if(targetSquare.getAttribute('occupied') === 'true')return;
     if(targetPiece.getAttribute('player') === 'red'){
         redMove(targetSquare, targetPiece);
     }
@@ -87,28 +102,83 @@ function selectSquare(evt){
     }
 
     pieceSelected = false;
-    targetpiece = [];
+    selectedPieceArray = [];
+    render();
+}
+function jump(checkerToJump, checkerJumping){
+    const a = checkerToJump.getAttribute('position');
+    const x = a[0];
+    const y = a[2];
+    console.log(x)
+    console.log(y);
+    const coordinateX = moves.redJump.x[0] + parseInt(x);
+    const coordinateY = moves.redJump.x[1] + parseInt(y);
+    const coordinateX1 = moves.redJump.y[0] + parseInt(x);
+    const coordinateY1= moves.redJump.y[1] + parseInt(y);
+
+    for(let i = 0; i < boardSquares.length; i++){
+        if(((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY)) && (boardSquares[i].attributes.occupied.value !== 'true'))
+            {
+           
+             if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])){
+                    
+
+
+            const tarSqr = boardSquares[i];
+            console.log(tarSqr.attributes.occupied.value)
+            
+            console.log(tarSqr)
+            console.log(checkerJumping)
+            checkerToJump.parentElement.setAttribute('occupied', 'false')
+            checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value)
+            checkerJumping[0].parentElement.setAttribute('occupied', 'false')
+            
+            tarSqr.setAttribute('occupied', true)
+            checkerToJump.remove(checkerToJump);
+            tarSqr.appendChild(checkerJumping[0])
+            return;
+                }
+        }else if((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX1) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY1) && (boardSquares[i].attributes.occupied.value !== 'true')){
+            if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])){
+            console.log(boardSquares[i]) 
+            console.log(boardSquares[i])
+            const tarSqr = boardSquares[i];
+            console.log(tarSqr.attributes.occupied.value)
+            console.log(tarSqr)
+            console.log(checkerJumping)
+            checkerToJump.parentElement.setAttribute('occupied', false)
+            checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value)
+            checkerJumping[0].parentElement.setAttribute('occupied', false)
+            tarSqr.setAttribute('occupied', true)
+            checkerToJump.remove(checkerToJump);
+            tarSqr.appendChild(checkerJumping[0])
+            checkerJumping =[];
+            return;
+            }
+        }
+    }
+             
+    console.log('jump was attempted')
+
 }
 function redMove(square, checker){
     let a = checker.getAttribute('position')
     let b = square.getAttribute('position')
-    console.log(a[1]);
-    console.log(b[1]);
+   
     let x = a[0] - b[0];
-    let y = a[2] - b[2];
-    let z = [x,y];
-    console.log(z);
-    
+    let y = a[2] - b[2]; 
 
     if((moves.redMove.x[0] === x && moves.redMove.x[1] === y) || moves.redMove.y[0] === x && moves.redMove.y[1] === y){
-        console.log('fuck me')
+        
         checker.setAttribute('position', square.attributes.position.value)
         square.setAttribute('occupied', true)
         checker.parentElement.setAttribute('occupied', false)
         square.appendChild(checker);
         selectedPieceArray = [];
+    }else{
+        return selectedPieceArray = [];
     }
-    render();
+    
 }
 function blackMove(square, checker){
     let a = checker.getAttribute('position')
@@ -120,15 +190,17 @@ function blackMove(square, checker){
     let z = [x,y];
     console.log(z);
 
-    if((moves.blackMove.x[0] === x && moves.blackMove.x[1] === y) || moves.blackMove.y[0] === y && moves.blackMove.y[1] === y){
-        console.log(a-b)
+    if((moves.blackMove.x[0] === x && moves.blackMove.x[1] === y) || moves.blackMove.y[0] === x && moves.blackMove.y[1] === y){
+        console.log('fuck me?')
         checker.setAttribute('position', square.attributes.position.value)
         checker.parentElement.setAttribute('occupied', false)
         square.setAttribute('occupied', true)
         square.appendChild(checker);
         selectedPieceArray = [];
+    }else{
+        return selectedPieceArray = [];
     }
-    render();
+    
 }   
 function render(){
 
@@ -141,6 +213,11 @@ function render(){
         console.log('Congrats Player 2! You win')
     }
     changeTurn();
+    selectedPieceArray = [];
+    pieceSelected = false;
+    console.log(selectedPieceArray)
+    console.log(pieceSelected);
+    console.log(playerTurn)
 }
 function changeTurn(){
     
@@ -151,48 +228,20 @@ function changeTurn(){
     };
 }
 
-
-// These functions operates the drag and drop/moves
-// function drag(ev){
-// console.log(ev.target.class)
-//     // if(ev.target.id === 'checker20'){
-//     //     return
-//     // }
-//     ev.dataTransfer.setData('div', ev.target.id)
-
-
-// }
-// function allowDrop(ev){
-//     ev.preventDefault();
-//     // console.log('hello')
-// }
-// function drop(ev){
-//     ev.preventDefault();
-//     var chck = ev.dataTransfer.getData("div");
-//     ev.target.appendChild(document.getElementById(chck));
-// }
-
-// function setAttributes(){
-//     for( let i = 0; i < boardSquares.length; i++)
-//     {
-//         boardSquares[i].setAttribute("ondrop", "drop(event)")
-//         boardSquares[i].setAttribute("ondragover", "allowDrop(event)")
-//     }
-// }
-
-//Initialinzing gameplay function
-
-
 function play(){
     removeCheckers();
     init(); 
+    console.log(playerTurn)
+    console.log(selectedPieceArray)
+    console.log(pieceSelected)
 }
 
 function init(){
+    render();
     renderScores();
     setBoard();
     createCheckers();
-    
+    playerTurn = redCheckers.player;
     // setAttributes();
 }
 function setBoard(){
