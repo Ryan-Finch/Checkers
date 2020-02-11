@@ -71,15 +71,21 @@ document.querySelector('button').addEventListener('click', play);
 
 /* -----functions-----*/
 function checkerSelection(evt){
-    let target = evt.target;
+    const target = evt.target;
     evt.stopImmediatePropagation();
 
     console.log(target)
     
     if((target.attributes.player.value !== playerTurn) && (pieceSelected === true)){
-        jump(target,selectedPieceArray);
-        render();
-        return;
+        if(playerTurn === 'red'){
+            redJump(target,selectedPieceArray);
+            pieceSelected = [];
+            return;
+        }else if(playerTurn === 'black'){
+            blackJump(target,selectedPieceArray);
+            pieceSelected = []
+            return;
+        }
     }else if(pieceSelected === true){
         return
     }
@@ -90,8 +96,8 @@ function checkerSelection(evt){
 }
 
 function selectSquare(evt){
-    let targetSquare = evt.target;
-    let targetPiece = selectedPieceArray[0];
+    const targetSquare = evt.target;
+    const targetPiece = selectedPieceArray[0];
     if(pieceSelected === false) return
     if(targetSquare.getAttribute('occupied') === 'true')return;
     if(targetPiece.getAttribute('player') === 'red'){
@@ -105,61 +111,91 @@ function selectSquare(evt){
     selectedPieceArray = [];
     render();
 }
-function jump(checkerToJump, checkerJumping){
+function redJump(checkerToJump, checkerJumping){
     const a = checkerToJump.getAttribute('position');
     const x = a[0];
     const y = a[2];
-    console.log(x)
-    console.log(y);
     const coordinateX = moves.redJump.x[0] + parseInt(x);
     const coordinateY = moves.redJump.x[1] + parseInt(y);
     const coordinateX1 = moves.redJump.y[0] + parseInt(x);
     const coordinateY1= moves.redJump.y[1] + parseInt(y);
 
     for(let i = 0; i < boardSquares.length; i++){
-        if(((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY)) && (boardSquares[i].attributes.occupied.value !== 'true'))
-            {
-           
-             if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])){
+        if(((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY)) && (boardSquares[i].attributes.occupied.value !== 'true')){
+           if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])){
                     
-
-
-            const tarSqr = boardSquares[i];
-            console.log(tarSqr.attributes.occupied.value)
-            
-            console.log(tarSqr)
-            console.log(checkerJumping)
-            checkerToJump.parentElement.setAttribute('occupied', 'false')
-            checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value)
-            checkerJumping[0].parentElement.setAttribute('occupied', 'false')
-            
-            tarSqr.setAttribute('occupied', true)
-            checkerToJump.remove(checkerToJump);
-            tarSqr.appendChild(checkerJumping[0])
-            return;
-                }
+                const tarSqr = boardSquares[i];
+                checkerToJump.parentElement.setAttribute('occupied', 'false')
+                checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value)
+                checkerJumping[0].parentElement.setAttribute('occupied', 'false')
+                tarSqr.setAttribute('occupied', true)
+                checkerToJump.remove(checkerToJump);
+                tarSqr.appendChild(checkerJumping[0])
+                scores.blackPiecesTaken += 1;
+                scores.blackPieceCount -= 1;
+                render();
+                return;
+            }
         }else if((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX1) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY1) && (boardSquares[i].attributes.occupied.value !== 'true')){
             if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])){
-            console.log(boardSquares[i]) 
-            console.log(boardSquares[i])
-            const tarSqr = boardSquares[i];
-            console.log(tarSqr.attributes.occupied.value)
-            console.log(tarSqr)
-            console.log(checkerJumping)
-            checkerToJump.parentElement.setAttribute('occupied', false)
-            checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value)
-            checkerJumping[0].parentElement.setAttribute('occupied', false)
-            tarSqr.setAttribute('occupied', true)
-            checkerToJump.remove(checkerToJump);
-            tarSqr.appendChild(checkerJumping[0])
-            checkerJumping =[];
-            return;
+                const tarSqr = boardSquares[i];
+                checkerToJump.parentElement.setAttribute('occupied', false)
+                checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value)
+                checkerJumping[0].parentElement.setAttribute('occupied', false)
+                tarSqr.setAttribute('occupied', true)
+                checkerToJump.remove(checkerToJump);
+                tarSqr.appendChild(checkerJumping[0])
+                checkerJumping =[];
+                scores.blackPiecesTaken += 1;
+                scores.blackPieceCount -= 1;
+                render();
+                return;
             }
         }
     }
-             
-    console.log('jump was attempted')
+}
+function blackJump(checkerToJump, checkerJumping){
+    const a = checkerToJump.getAttribute('position');
+    const x = a[0];
+    const y = a[2];
+    const coordinateX = moves.blackJump.x[0] + parseInt(x);
+    const coordinateY = moves.blackJump.x[1] + parseInt(y);
+    const coordinateX1 = moves.blackJump.y[0] + parseInt(x);
+    const coordinateY1= moves.blackJump.y[1] + parseInt(y);
 
+    for(let i = 0; i < boardSquares.length; i++){
+        if(((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY)) && (boardSquares[i].attributes.occupied.value !== 'true')){
+           if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])){
+                    
+                const tarSqr = boardSquares[i];
+                checkerToJump.parentElement.setAttribute('occupied', 'false')
+                checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value)
+                checkerJumping[0].parentElement.setAttribute('occupied', 'false')
+                tarSqr.setAttribute('occupied', true)
+                checkerToJump.remove(checkerToJump);
+                tarSqr.appendChild(checkerJumping[0]);
+                scores.redPiecesTaken += 1;
+                scores.redPieceCount -= 1;
+                render();
+                return;
+            }
+        }else if((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX1) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY1) && (boardSquares[i].attributes.occupied.value !== 'true')){
+            if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])){
+                const tarSqr = boardSquares[i];
+                checkerToJump.parentElement.setAttribute('occupied', false)
+                checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value)
+                checkerJumping[0].parentElement.setAttribute('occupied', false)
+                tarSqr.setAttribute('occupied', true)
+                checkerToJump.remove(checkerToJump);
+                tarSqr.appendChild(checkerJumping[0])
+                checkerJumping =[];
+                scores.redPiecesTaken += 1;
+                scores.redPieceCount -= 1;
+                render();
+                return;
+            }
+        }
+    }
 }
 function redMove(square, checker){
     let a = checker.getAttribute('position')
@@ -213,6 +249,7 @@ function render(){
         console.log('Congrats Player 2! You win')
     }
     changeTurn();
+    renderScores();
     selectedPieceArray = [];
     pieceSelected = false;
     console.log(selectedPieceArray)
@@ -231,17 +268,17 @@ function changeTurn(){
 function play(){
     removeCheckers();
     init(); 
-    console.log(playerTurn)
-    console.log(selectedPieceArray)
-    console.log(pieceSelected)
+  
 }
 
 function init(){
-    render();
     renderScores();
     setBoard();
     createCheckers();
     playerTurn = redCheckers.player;
+    console.log(playerTurn)
+    console.log(selectedPieceArray)
+    console.log(pieceSelected)
     // setAttributes();
 }
 function setBoard(){
