@@ -1,30 +1,40 @@
 /* -----Constants-----*/
-const checkerBoard = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32];
+const checkerBoard =[ 
+    [1,1],[1,3],[1,5],[1,7],
+    [2,2],[2,4],[2,6],[2,8],
+    [3,1],[3,3],[3,5],[3,7],
+    [4,2],[4,4],[4,6],[4,8],
+    [5,1],[5,3],[5,5],[5,7],
+    [6,2],[6,4],[6,6],[6,8],
+    [7,1],[7,3],[7,5],[7,7],
+    [8,2],[8,4],[8,6],[8,8],
+];
 
 const redCheckers = {
     color: 'red',
-    position: 0,
+    position: [],
     king: false,
-    // draggable: true,
     class: "checker red-checker",
     player: 'red',
 };
-
 const blackCheckers = {
     color: 'black',
-    position: 0,
+    position: [],
     king: false,
-    // draggable: true,
     class: "checker black-checker",
     player: 'black'
 };
 const moves ={
-    redMove: [-3, -4, -5],
-    redJump: [-7, -9],
-    blackMove: [3, 4, 5],
-    blackJump: [7, 9],
-    kingMove: [3, -3, 4.-4, 5, -5],
-    kingJump: [7, -7, 9, -9]
+    redMove: {
+        x:[-1, -1],
+        y:[-1, 1]},
+    redJump: [[-2,-2],[-2,2]],
+    blackMove: {
+        x: [1,1],
+        y: [1,-1]},
+    blackJump: [[2, 2],[2,-2]],
+    kingMove: [[1,1],[1,-1],[-1,-1],[-1,1]],
+    kingJump: [[2,2],[2,-2],[-2,-2], [-2,2],]
 }
 
 /* -----app state(variables)-----*/
@@ -77,14 +87,24 @@ function selectSquare(evt){
     }
 
     pieceSelected = false;
-    
+    targetpiece = [];
 }
 function redMove(square, checker){
     let a = checker.getAttribute('position')
     let b = square.getAttribute('position')
-  
-    if(moves.redMove.includes(a-b)){
-        console.log(a-b)
+    console.log(a[1]);
+    console.log(b[1]);
+    let x = a[0] - b[0];
+    let y = a[2] - b[2];
+    let z = [x,y];
+    console.log(z);
+    
+
+    if((moves.redMove.x[0] === x && moves.redMove.x[1] === y) || moves.redMove.y[0] === x && moves.redMove.y[1] === y){
+        console.log('fuck me')
+        checker.setAttribute('position', square.attributes.position.value)
+        square.setAttribute('occupied', true)
+        checker.parentElement.setAttribute('occupied', false)
         square.appendChild(checker);
         selectedPieceArray = [];
     }
@@ -93,9 +113,18 @@ function redMove(square, checker){
 function blackMove(square, checker){
     let a = checker.getAttribute('position')
     let b = square.getAttribute('position')
+    console.log(a[1]);
+    console.log(b[1]);
+    let x = a[0] - b[0];
+    let y = a[2] - b[2];
+    let z = [x,y];
+    console.log(z);
 
-    if(moves.blackMove.includes(a-b)){
+    if((moves.blackMove.x[0] === x && moves.blackMove.x[1] === y) || moves.blackMove.y[0] === y && moves.blackMove.y[1] === y){
         console.log(a-b)
+        checker.setAttribute('position', square.attributes.position.value)
+        checker.parentElement.setAttribute('occupied', false)
+        square.setAttribute('occupied', true)
         square.appendChild(checker);
         selectedPieceArray = [];
     }
@@ -161,17 +190,19 @@ function play(){
 
 function init(){
     renderScores();
-    createCheckers();
     setBoard();
+    createCheckers();
+    
     // setAttributes();
 }
 function setBoard(){
     
-    checkerBoard.forEach(function(i){
-        console.log(i)
+    for(let i = 0; i <boardSquares.length; i++){
         boardSquares[i].setAttribute('position', checkerBoard[i]);
         boardSquares[i].addEventListener('click', selectSquare)
-    })
+        boardSquares[i].setAttribute('occupied', false)
+    }
+
 }
 
 function renderScores(){
