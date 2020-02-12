@@ -109,5 +109,5 @@ h4{
     margin: 5px;
 }
 .selected{
-    border-color: yellow;
+    border: 5px solid yellow;
 }

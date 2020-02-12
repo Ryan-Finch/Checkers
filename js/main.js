@@ -74,15 +74,18 @@ function checkerSelection(evt){
     if((target.attributes.player.value !== playerTurn) && (pieceSelected === true)){
         if(selectedPieceArray[0].classList.contains('red-king') || selectedPieceArray[0].classList.contains('black-king')){
             kingJump(target, selectedPieceArray);
+            
             pieceSelected = false;
             return;
         }
         if(playerTurn === 'red'){
             redJump(target,selectedPieceArray);
+            
             pieceSelected = false;
             return;
         }else if(playerTurn === 'black'){
             blackJump(target,selectedPieceArray);
+            
             pieceSelected = false;
             return;
         }
@@ -92,6 +95,7 @@ function checkerSelection(evt){
     }
     if(target.attributes.player.value !== playerTurn) return
 
+    target.classList.add('selected')
     selectedPieceArray.push(target)
     pieceSelected = true;
 }
@@ -99,6 +103,8 @@ function checkerSelection(evt){
 function selectSquare(evt){
     const targetSquare = evt.target;
     const targetPiece = selectedPieceArray[0];
+    
+    if(targetPiece){targetPiece.classList.remove('selected')}
     if(pieceSelected === false) return
     if(targetSquare.getAttribute('occupied') === 'true')return;
     if(targetPiece.classList.contains('red-king') || targetPiece.classList.contains('black-king')){
@@ -169,6 +175,7 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
                             scores.redPiecesTaken += 1;
                             scores.redPieceCount -= 1;
                         };
+                        checkerJumping[0].classList.remove('selected')
                         checkerJumping =[];
                         render();
                         return;
@@ -194,6 +201,7 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
                             scores.redPiecesTaken += 1;
                             scores.redPieceCount -= 1;
                         }
+                        checkerJumping[0].classList.remove('selected')
                         checkerJumping =[];
                         render();
                         return;
