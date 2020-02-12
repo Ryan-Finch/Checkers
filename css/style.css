@@ -108,3 +108,6 @@ h4{
     transition: 1s ease-in-out;
     margin: 5px;
 }
+.selected{
+    border-color: yellow;
+}
