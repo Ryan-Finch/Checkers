@@ -139,36 +139,44 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
     for(let i = 0; i < boardSquares.length; i++){
         if(((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY)) && (boardSquares[i].attributes.occupied.value !== 'true')){
            if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])) {
-                console.log(parseInt(boardSquares[i].getAttribute('position')[0]))
-                console.log(parseInt(checkerJumping[0].getAttribute('position')[0]) + 2)
-                    const tarSqr = boardSquares[i];
-                    checkerToJump.parentElement.setAttribute('occupied', 'false')
-                    checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value)
-                    checkerJumping[0].parentElement.setAttribute('occupied', 'false')
-                    tarSqr.setAttribute('occupied', true)
-                    checkerToJump.remove(checkerToJump);
-                    tarSqr.appendChild(checkerJumping[0])
-                    isKing(checkerJumping[0]);
-                    checkerJumping =[];
+                const tarSqr = boardSquares[i];
+                checkerToJump.parentElement.setAttribute('occupied', 'false');
+                checkerJumping[0].setAttribute('position',tarSqr.attributes.position.value);
+                checkerJumping[0].parentElement.setAttribute('occupied', 'false');
+                tarSqr.setAttribute('occupied', true);
+                checkerToJump.remove(checkerToJump);
+                tarSqr.appendChild(checkerJumping[0]);
+                isKing(checkerJumping[0]);
+                if(checkerJumping[0].getAttribute('player') === 'red'){
                     scores.blackPiecesTaken += 1;
                     scores.blackPieceCount -= 1;
-                    render();
-                    return;
+                }else{
+                    scores.redPiecesTaken += 1;
+                    scores.redPieceCount -= 1;
+                };
+                checkerJumping =[];
+                render();
+                return;
             
             }
         }else if((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX1) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY1) && (boardSquares[i].attributes.occupied.value !== 'true')){
             if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])){
                 const tarSqr = boardSquares[i];
-                checkerToJump.parentElement.setAttribute('occupied', false)
-                checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value)
-                checkerJumping[0].parentElement.setAttribute('occupied', false)
-                tarSqr.setAttribute('occupied', true)
+                checkerToJump.parentElement.setAttribute('occupied', false);
+                checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value);
+                checkerJumping[0].parentElement.setAttribute('occupied', false);
+                tarSqr.setAttribute('occupied', true);
                 checkerToJump.remove(checkerToJump);
-                tarSqr.appendChild(checkerJumping[0])
+                tarSqr.appendChild(checkerJumping[0]);
                 isKing(checkerJumping[0]);
+                if(checkerJumping[0].getAttribute('player') === 'red'){
+                    scores.blackPiecesTaken += 1;
+                    scores.blackPieceCount -= 1;
+                }else{
+                    scores.redPiecesTaken += 1;
+                    scores.redPieceCount -= 1;
+                }
                 checkerJumping =[];
-                scores.blackPiecesTaken += 1;
-                scores.blackPieceCount -= 1;
                 render();
                 return;
             }
@@ -258,7 +266,6 @@ function getWinner(){
         message.innerHTML = `Winner is Player 2!!`
     }else if(scores.blackPieceCount === 0){
         scores.winner = scores.player1;
-        console.log('hmmm');
         message.innerHTML = `Winner is Player 1!!`
     }
 }
