@@ -72,7 +72,6 @@ function checkerSelection(evt){
     const target = evt.target;
     
     if((target.attributes.player.value !== playerTurn) && (pieceSelected === true)){
-        console.log('kingMove')
         if(selectedPieceArray[0].classList.contains('red-king') || selectedPieceArray[0].classList.contains('black-king')){
             kingJump(target, selectedPieceArray);
             pieceSelected = false;
@@ -180,7 +179,6 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
             if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])){
                 if((parseInt(boardSquares[i].getAttribute('position')[0]) === parseInt(checkerJumping[0].getAttribute('position')[0]) + 2) || (parseInt(boardSquares[i].getAttribute('position')[0]) === parseInt(checkerJumping[0].getAttribute('position')[0]) - 2)){
                     if((parseInt(boardSquares[i].getAttribute('position')[2]) === (parseInt(checkerJumping[0].getAttribute('position')[2]) + 2)) || (parseInt(boardSquares[i].getAttribute('position')[2]) === (parseInt(checkerJumping[0].getAttribute('position')[2]) - 2))){
-                        console.log('whats going on')
                         const tarSqr = boardSquares[i];
                         checkerToJump.parentElement.setAttribute('occupied', false);
                         checkerJumping[0].setAttribute('position',      tarSqr.attributes.position.value);
