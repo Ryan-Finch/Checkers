@@ -15,7 +15,7 @@ Eventual plans will be to add the double jump method and add some more visual ef
 
 
 
-![wireframe](/wireframe.jpg)
+![wireframe](wireframe.jpg)
 ``` 
 PseudoCode
 
