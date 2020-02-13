@@ -1,6 +1,6 @@
 # Checkers
 
-![Starting-Game-Board](../img/game1.png)
+![Starting-Game-Board](./img/game1.png)
 
 
 This is a simple version of checkers using just HTML,CSS, and Javascript to write the whole project.
@@ -11,7 +11,7 @@ Things to know when getting started, press the begin button to set teh board and
 
 Eventual plans will be to add the double jump method and add some more visual effects to the game.
 
-![Kinged](../img/game2.png)
+![Kinged](./img/game2.png)
 
 
 
