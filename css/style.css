@@ -90,7 +90,7 @@ h4{
 }
 
 .red-king{
-    background-image: url(/img/crown.jpg);
+    background-image: url(../img/crown.jpg);
     background-size: contain;
     border-radius: 50%;
     background-color: rgb(146, 5, 5);
@@ -100,7 +100,7 @@ h4{
 }
 
 .black-king{
-    background-image: url(/img/crown.jpg);
+    background-image: url(../img/crown.jpg);
     background-size: contain;
     border-radius: 50%;
     background-color: rgb(104, 10, 104);
