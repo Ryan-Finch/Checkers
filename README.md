@@ -1,7 +1,21 @@
 # Checkers
 
-![Checkers Wireframe](./wire_frame.jpg)
+![Starting-Game-Board](../img/game1.png)
 
+
+This is a simple version of checkers using just HTML,CSS, and Javascript to write the whole project.
+
+https://ryan-finch.github.io/Checkers/ Here is a playable version.
+
+Things to know when getting started, press the begin button to set teh board and scores. Red always goes first. All mechanics of checkers are avaible except for double jumps. But get to teh end and you will be kinged and can move in all directions after that. Winner is declared when all pieces from the opposing side have been taken.
+
+Eventual plans will be to add the double jump method and add some more visual effects to the game.
+
+![Kinged](../img/game2.png)
+
+
+
+![wireframe](./wireframe.jpg)
 ``` 
 PseudoCode
 
