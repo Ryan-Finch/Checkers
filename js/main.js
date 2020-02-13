@@ -360,25 +360,22 @@ function createCheckers(){
     
     for(let i = 0; i < 12; i++){
         const checker = document.createElement('div'); 
+        boardSquares[i].appendChild(checker);
         checker.setAttribute('class', redCheckers.class)
-
         checker.setAttribute('player', redCheckers.player)
         checker.setAttribute('position', checkerBoard[i])
-        boardSquares[i].appendChild(checker);
         checker.addEventListener('click', checkerSelection)
-        boardSquares[i].setAttribute('occupied', true);
-        checker.style.visibility = 'visible';
+        boardSquares[i].setAttribute('occupied', true);        
     }
 
     for(let i = 20; i < 32; i++){
         const checker = document.createElement('div'); 
+        boardSquares[i].appendChild(checker);
         checker.setAttribute('class',  blackCheckers.class);
         checker.setAttribute('player', blackCheckers.player);
-        boardSquares[i].appendChild(checker);
         checker.setAttribute('position',checkerBoard[i] )
         checker.addEventListener('click', checkerSelection)
         boardSquares[i].setAttribute('occupied', true);
-        checker.style.visibility = 'visible';
     }
 }
 

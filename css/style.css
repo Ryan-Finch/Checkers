@@ -58,7 +58,6 @@ h4{
     background-color: burlywood;
     display: grid;
     border: 1px solid black;
-    position: relative;   
 }
 .red-board-square{
     background-color: rgb(150, 23, 23);
@@ -70,21 +69,15 @@ h4{
     border-radius: 50%;
     background: radial-gradient(rgb(201, 121, 2), rgb(146, 5, 5));
     border: 2px solid white;
-    
-    visibility: hidden;
     margin: 5px;
     box-shadow: 3px 3px 3px;
-    transition: visibility .5s ease-in;
-   
 } 
 .black-checker{
     border-radius: 50%;
     border: 2px solid white;
     background: radial-gradient(purple, black);
     margin: 5px;
-    transition: visible.5s ease-in-out ;
     box-shadow: 3px 3px 3px;
-    visibility: hidden;
 }
 #play{
     grid-row: 3/3;
