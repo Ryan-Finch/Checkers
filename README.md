@@ -15,7 +15,7 @@ Eventual plans will be to add the double jump method and add some more visual ef
 ![Kinged](./img/game2.png)
 
 
-![wireframe](./wireframe.jpg)
+![wireframe](./wire_frame.jpg)
 
 
 ``` 

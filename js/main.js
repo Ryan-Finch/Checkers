@@ -179,7 +179,7 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
                         checkerJumping =[];
                         render();
                         return;
-                }
+                     }
                 }
             }
         }else if((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX1) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY1) && (boardSquares[i].attributes.occupied.value !== 'true')){
@@ -367,6 +367,7 @@ function createCheckers(){
         boardSquares[i].appendChild(checker);
         checker.addEventListener('click', checkerSelection)
         boardSquares[i].setAttribute('occupied', true);
+        checker.style.visibility = 'visible';
     }
 
     for(let i = 20; i < 32; i++){
@@ -377,6 +378,7 @@ function createCheckers(){
         checker.setAttribute('position',checkerBoard[i] )
         checker.addEventListener('click', checkerSelection)
         boardSquares[i].setAttribute('occupied', true);
+        checker.style.visibility = 'visible';
     }
 }
 

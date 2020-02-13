@@ -7,7 +7,8 @@ body {
     justify-content: center;
     align-content: center;
     height: 100vh;
-    background-color:  #570f0a;
+    background-color: slategray;
+      /* #570f0a; */
     grid-template-columns: 1fr auto 1fr;
     grid-template-rows: 1fr 3fr 1fr;
 }
@@ -47,35 +48,43 @@ h4{
     width: 700px;
     height: 700px;
     justify-content: center;
-    border: 5px solid black;
+    border: 10px solid black;
     grid-row: 2/3;
     grid-column: 2/3;
-
+   
 }
 
 .white-board-square{
     background-color: burlywood;
     display: grid;
+    border: 1px solid black;
+    position: relative;   
 }
 .red-board-square{
     background-color: rgb(150, 23, 23);
+    border: 1px solid black;
+
    
 }  
 .red-checker{
     border-radius: 50%;
     background: radial-gradient(rgb(201, 121, 2), rgb(146, 5, 5));
-    border: 3px solid black;
-    transition: 1s ease-in-out;
+    border: 2px solid white;
+    
+    visibility: hidden;
     margin: 5px;
-
+    box-shadow: 3px 3px 3px;
+    transition: visibility .5s ease-in;
+   
 } 
-
 .black-checker{
     border-radius: 50%;
     border: 2px solid white;
     background: radial-gradient(purple, black);
     margin: 5px;
-    transition: 1s ease-in-out ;
+    transition: visible.5s ease-in-out ;
+    box-shadow: 3px 3px 3px;
+    visibility: hidden;
 }
 #play{
     grid-row: 3/3;
@@ -95,7 +104,6 @@ h4{
     border-radius: 50%;
     background-color: rgb(146, 5, 5);
     border: 3px solid black;
-    transition: 1s ease-in-out;
     margin: 5px;
 }
 
@@ -105,7 +113,6 @@ h4{
     border-radius: 50%;
     background-color: rgb(104, 10, 104);
     border: 3px  solid white;
-    transition: 1s ease-in-out;
     margin: 5px;
 }
 .selected{
