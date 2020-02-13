@@ -9,7 +9,6 @@ const checkerBoard =[
     [7,1],[7,3],[7,5],[7,7],
     [8,2],[8,4],[8,6],[8,8],
 ];
-
 const redCheckers = {
     position: [],
     class: "checker red-checker",
@@ -70,22 +69,18 @@ function checkerSelection(evt){
     if(scores.winner !== null) return;
     evt.stopImmediatePropagation();
     const target = evt.target;
-    
     if((target.attributes.player.value !== playerTurn) && (pieceSelected === true)){
         if(selectedPieceArray[0].classList.contains('red-king') || selectedPieceArray[0].classList.contains('black-king')){
             kingJump(target, selectedPieceArray);
-            
             pieceSelected = false;
             return;
         }
         if(playerTurn === 'red'){
             redJump(target,selectedPieceArray);
-            
             pieceSelected = false;
             return;
         }else if(playerTurn === 'black'){
             blackJump(target,selectedPieceArray);
-            
             pieceSelected = false;
             return;
         }
@@ -94,7 +89,6 @@ function checkerSelection(evt){
         return;
     }
     if(target.attributes.player.value !== playerTurn) return
-
     target.classList.add('selected')
     selectedPieceArray.push(target)
     pieceSelected = true;
@@ -103,7 +97,6 @@ function checkerSelection(evt){
 function selectSquare(evt){
     const targetSquare = evt.target;
     const targetPiece = selectedPieceArray[0];
-    
     if(targetPiece){targetPiece.classList.remove('selected')}
     if(pieceSelected === false) return
     if(targetSquare.getAttribute('occupied') === 'true')return;
@@ -117,7 +110,6 @@ function selectSquare(evt){
     }else{
         return;
     }
-
     if(evt.target.getAttribute('occupied') === 'true'){ 
         render();
     }else{
@@ -135,7 +127,6 @@ function redJump(checkerToJump, checkerJumping){
     const coordinateY = moves.redJump.x[1] + parseInt(y);
     const coordinateX1 = moves.redJump.y[0] + parseInt(x);
     const coordinateY1= moves.redJump.y[1] + parseInt(y);
-
     jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump,checkerJumping);
 }
 function blackJump(checkerToJump, checkerJumping){
@@ -146,7 +137,6 @@ function blackJump(checkerToJump, checkerJumping){
     const coordinateY = moves.blackJump.x[1] + parseInt(y);
     const coordinateX1 = moves.blackJump.y[0] + parseInt(x);
     const coordinateY1= moves.blackJump.y[1] + parseInt(y);
-
     jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump,checkerJumping);
 }
 function kingJump(checkerToJump, checkerJumping){
@@ -154,7 +144,6 @@ function kingJump(checkerToJump, checkerJumping){
     redJump(checkerToJump, checkerJumping);
 }
 function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, checkerJumping){
-
     for(let i = 0; i < boardSquares.length; i++){
         if(((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY)) && (boardSquares[i].attributes.occupied.value !== 'true')){
            if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])) {
@@ -168,13 +157,7 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
                         checkerToJump.remove(checkerToJump);
                         tarSqr.appendChild(checkerJumping[0]);
                         isKing(checkerJumping[0]);
-                        if(checkerJumping[0].getAttribute('player') === 'red'){
-                            scores.blackPiecesTaken += 1;
-                            scores.blackPieceCount -= 1;
-                        }else{
-                            scores.redPiecesTaken += 1;
-                            scores.redPieceCount -= 1;
-                        };
+                        changeScore(checkerJumping);
                         checkerJumping[0].classList.remove('selected')
                         checkerJumping =[];
                         render();
@@ -194,13 +177,7 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
                         checkerToJump.remove(checkerToJump);
                         tarSqr.appendChild(checkerJumping[0]);
                         isKing(checkerJumping[0]);
-                        if(checkerJumping[0].getAttribute('player') === 'red'){
-                            scores.blackPiecesTaken += 1;
-                            scores.blackPieceCount -= 1;
-                        }else{
-                            scores.redPiecesTaken += 1;
-                            scores.redPieceCount -= 1;
-                        }
+                        changeScore(checkerJumping)
                         checkerJumping[0].classList.remove('selected')
                         checkerJumping =[];
                         render();
@@ -222,16 +199,13 @@ function redMove(square, checker){
     let b = square.getAttribute('position')
     let x = a[0] - b[0];
     let y = a[2] - b[2]; 
-
    move(square, checker, x, y);
-   
 }
 function blackMove(square, checker){
     let a = checker.getAttribute('position')
     let b = square.getAttribute('position')
     let x = a[0] - b[0];
     let y = a[2] - b[2];
-
     move(square, checker, x, y);
 } 
 function move(square, checker, x, y){
@@ -265,7 +239,6 @@ function render(){
     renderScores();
     displayTurn();
     getWinner();
-    
     selectedPieceArray = [];
     pieceSelected = false;
 }
@@ -293,13 +266,11 @@ function getWinner(){
 
 //changes the player turn
 function changeTurn(){
-    
-        if(playerTurn === scores.player1){
-            playerTurn = scores.player2;
-        }else{
-            playerTurn = scores.player1;
-        };
-    
+    if(playerTurn === scores.player1){
+        playerTurn = scores.player2;
+    }else{
+        playerTurn = scores.player1;
+    };
 }
 
 //button click to create pieces and init the board state
@@ -307,7 +278,6 @@ function play(){
     removeCheckers();
     resetScores();
     init(); 
-  
 }
 
 //resets scores to initial value
@@ -318,7 +288,15 @@ function resetScores(){
     scores.redPiecesTaken = 0;
     scores.winner = null;
 }
-
+function changeScore(checkerJumping){
+    if(checkerJumping[0].getAttribute('player') === 'red'){
+        scores.blackPiecesTaken += 1;
+        scores.blackPieceCount -= 1;
+    }else{
+        scores.redPiecesTaken += 1;
+        scores.redPieceCount -= 1;
+    }
+}
 //As it says, initializes the board and HTML
 function init(){
     renderScores();
@@ -330,7 +308,6 @@ function init(){
 
 //maps board with coordinates for location, adds event listener to each board and gives occupied/false attribute
 function setBoard(){
-    
     for(let i = 0; i <boardSquares.length; i++){
         boardSquares[i].setAttribute('position', checkerBoard[i]);
         boardSquares[i].addEventListener('click', selectSquare)
@@ -357,7 +334,6 @@ function removeCheckers(){
 
 //creates all checekers for board and gives need attributes and event listeners
 function createCheckers(){
-    
     for(let i = 0; i < 12; i++){
         const checker = document.createElement('div'); 
         boardSquares[i].appendChild(checker);
@@ -367,7 +343,6 @@ function createCheckers(){
         checker.addEventListener('click', checkerSelection)
         boardSquares[i].setAttribute('occupied', true);        
     }
-
     for(let i = 20; i < 32; i++){
         const checker = document.createElement('div'); 
         boardSquares[i].appendChild(checker);

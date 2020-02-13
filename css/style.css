@@ -61,9 +61,7 @@ h4{
 }
 .red-board-square{
     background-color: rgb(150, 23, 23);
-    border: 1px solid black;
-
-   
+    border: 1px solid black;   
 }  
 .red-checker{
     border-radius: 50%;
