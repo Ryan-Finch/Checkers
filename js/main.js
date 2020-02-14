@@ -11,12 +11,12 @@ const checkerBoard =[
 ];
 const redCheckers = {
     position: [],
-    class: "checker red-checker",
+    class: "red-checker",
     player: 'red',
 };
 const blackCheckers = {
     position: [],
-    class: "checker black-checker",
+    class: "black-checker",
     player: 'black'
 };
 const moves ={
@@ -69,79 +69,50 @@ function checkerSelection(evt){
     if(scores.winner !== null) return;
     evt.stopImmediatePropagation();
     const target = evt.target;
+    
     if((target.attributes.player.value !== playerTurn) && (pieceSelected === true)){
-        if(selectedPieceArray[0].classList.contains('red-king') || selectedPieceArray[0].classList.contains('black-king')){
-            kingJump(target, selectedPieceArray);
-            pieceSelected = false;
-            return;
-        }
-        if(playerTurn === 'red'){
-            redJump(target,selectedPieceArray);
-            pieceSelected = false;
-            return;
-        }else if(playerTurn === 'black'){
-            blackJump(target,selectedPieceArray);
-            pieceSelected = false;
-            return;
-        }
-    }else if(pieceSelected === true){
+        readyJump(target, selectedPieceArray);
         
-        return;
-    }
+    }else clearSelection();
+
     if(target.attributes.player.value !== playerTurn) return
     target.classList.add('selected')
     selectedPieceArray.push(target)
     pieceSelected = true;
 }
-
 function selectSquare(evt){
     const targetSquare = evt.target;
     const targetPiece = selectedPieceArray[0];
-    if(targetPiece){targetPiece.classList.remove('selected')}
     if(pieceSelected === false) return
     if(targetSquare.getAttribute('occupied') === 'true')return;
-    if(targetPiece.classList.contains('red-king') || targetPiece.classList.contains('black-king')){
-        kingMove(targetSquare, targetPiece);
-    }
-    if(targetPiece.getAttribute('player') === 'red'){
-        redMove(targetSquare, targetPiece);
-    }else if(targetPiece.getAttribute('player') === 'black'){
-        blackMove(targetSquare, targetPiece);
-    }else{
-        return;
-    }
-    if(evt.target.getAttribute('occupied') === 'true'){ 
-        render();
-    }else{
-        selectedPieceArray = [];
-        pieceSelected = false;
-    }
+    move(targetSquare, targetPiece)   
+    if(targetPiece){targetPiece.classList.remove('selected')}
+    clearSelection();
 }
-
 //These are all the jump funtcions, red and black get the information needed and then call jump function for jump. King Jump calls both red and black jump
-function redJump(checkerToJump, checkerJumping){
-    const a = checkerToJump.getAttribute('position');
-    const x = a[0];
-    const y = a[2];
-    const coordinateX = moves.redJump.x[0] + parseInt(x);
-    const coordinateY = moves.redJump.x[1] + parseInt(y);
-    const coordinateX1 = moves.redJump.y[0] + parseInt(x);
-    const coordinateY1= moves.redJump.y[1] + parseInt(y);
-    jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump,checkerJumping);
-}
-function blackJump(checkerToJump, checkerJumping){
-    const a = checkerToJump.getAttribute('position');
-    const x = a[0];
-    const y = a[2];
-    const coordinateX = moves.blackJump.x[0] + parseInt(x);
-    const coordinateY = moves.blackJump.x[1] + parseInt(y);
-    const coordinateX1 = moves.blackJump.y[0] + parseInt(x);
-    const coordinateY1= moves.blackJump.y[1] + parseInt(y);
-    jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump,checkerJumping);
-}
-function kingJump(checkerToJump, checkerJumping){
-    blackJump(checkerToJump,checkerJumping);
-    redJump(checkerToJump, checkerJumping);
+function readyJump(checkerToJump, checkerJumping){
+    const checker = checkerJumping[0];
+    
+    if(checker.classList.contains('red-checker') || checker.classList.contains('king')){
+        const a = checkerToJump.getAttribute('position');
+        const x = a[0];
+        const y = a[2];
+        const coordinateX = moves.redJump.x[0] + parseInt(x);
+        const coordinateY = moves.redJump.x[1] + parseInt(y);
+        const coordinateX1 = moves.redJump.y[0] + parseInt(x);
+        const coordinateY1= moves.redJump.y[1] + parseInt(y);
+        jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump,checkerJumping);
+    }
+    if(checker.classList.contains('black-checker') || checker.classList.    contains('king')){
+        const a = checkerToJump.getAttribute('position');
+        const x = a[0];
+        const y = a[2];
+        const coordinateX = moves.blackJump.x[0] + parseInt(x);
+        const coordinateY = moves.blackJump.x[1] + parseInt(y);
+        const coordinateX1 = moves.blackJump.y[0] + parseInt(x);
+        const coordinateY1= moves.blackJump.y[1] + parseInt(y);
+        jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump,checkerJumping);
+    }
 }
 function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, checkerJumping){
     for(let i = 0; i < boardSquares.length; i++){
@@ -149,19 +120,8 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
            if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])) {
                 if((parseInt(boardSquares[i].getAttribute('position')[0]) === parseInt(checkerJumping[0].getAttribute('position')[0]) + 2) || (parseInt(boardSquares[i].getAttribute('position')[0]) === parseInt(checkerJumping[0].getAttribute('position')[0]) - 2)){
                     if((parseInt(boardSquares[i].getAttribute('position')[2]) === (parseInt(checkerJumping[0].getAttribute('position')[2]) + 2)) || (parseInt(boardSquares[i].getAttribute('position')[2]) === (parseInt(checkerJumping[0].getAttribute('position')[2]) - 2))){
-                        const tarSqr = boardSquares[i];
-                        checkerToJump.parentElement.setAttribute('occupied', 'false');
-                        checkerJumping[0].setAttribute('position',tarSqr.attributes.position.value);
-                        checkerJumping[0].parentElement.setAttribute('occupied', 'false');
-                        tarSqr.setAttribute('occupied', true);
-                        checkerToJump.remove(checkerToJump);
-                        tarSqr.appendChild(checkerJumping[0]);
-                        isKing(checkerJumping[0]);
-                        changeScore(checkerJumping);
-                        checkerJumping[0].classList.remove('selected')
-                        checkerJumping =[];
-                        render();
-                        return;
+                        
+                        landing(boardSquares[i],checkerToJump, checkerJumping);
                      }
                 }
             }
@@ -169,88 +129,97 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
             if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])){
                 if((parseInt(boardSquares[i].getAttribute('position')[0]) === parseInt(checkerJumping[0].getAttribute('position')[0]) + 2) || (parseInt(boardSquares[i].getAttribute('position')[0]) === parseInt(checkerJumping[0].getAttribute('position')[0]) - 2)){
                     if((parseInt(boardSquares[i].getAttribute('position')[2]) === (parseInt(checkerJumping[0].getAttribute('position')[2]) + 2)) || (parseInt(boardSquares[i].getAttribute('position')[2]) === (parseInt(checkerJumping[0].getAttribute('position')[2]) - 2))){
-                        const tarSqr = boardSquares[i];
-                        checkerToJump.parentElement.setAttribute('occupied', false);
-                        checkerJumping[0].setAttribute('position',      tarSqr.attributes.position.value);
-                        checkerJumping[0].parentElement.setAttribute('occupied', false);
-                        tarSqr.setAttribute('occupied', true);
-                        checkerToJump.remove(checkerToJump);
-                        tarSqr.appendChild(checkerJumping[0]);
-                        isKing(checkerJumping[0]);
-                        changeScore(checkerJumping)
-                        checkerJumping[0].classList.remove('selected')
-                        checkerJumping =[];
-                        render();
-                        return;
+
+                        landing(boardSquares[i],checkerToJump, checkerJumping);
                     }
                 }
             }
         }
     }
 }
-
+function landing(boardSquares,checkerToJump, checkerJumping){
+    const tarSqr = boardSquares;
+    checkerToJump.parentElement.setAttribute('occupied', false);
+    checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value);
+    checkerJumping[0].parentElement.setAttribute('occupied', false);
+    tarSqr.setAttribute('occupied', true);
+    checkerToJump.remove(checkerToJump);
+    tarSqr.appendChild(checkerJumping[0]);
+    isKing(checkerJumping[0]);
+    changeScore(checkerJumping)
+    checkerJumping[0].classList.remove('selected')
+    render();
+    return;
+}
 //These are the move functions, red and black feed needed info to move. King move calls both red and black move functions
-function kingMove(square, checker){
-    redMove(square, checker);
-    blackMove(square ,checker);
-}
-function redMove(square, checker){
-    let a = checker.getAttribute('position')
-    let b = square.getAttribute('position')
-    let x = a[0] - b[0];
-    let y = a[2] - b[2]; 
-   move(square, checker, x, y);
-}
-function blackMove(square, checker){
+// function kingMove(square, checker){
+//     redMove(square, checker);
+//     blackMove(square ,checker);
+// }
+// function redMove(square, checker){
+//     let a = checker.getAttribute('position')
+//     let b = square.getAttribute('position')
+//     let x = a[0] - b[0];
+//     let y = a[2] - b[2]; 
+//    move(square, checker, x, y);
+// }
+// function blackMove(square, checker){
+//     let a = checker.getAttribute('position')
+//     let b = square.getAttribute('position')
+//     let x = a[0] - b[0];
+//     let y = a[2] - b[2];
+//     move(square, checker, x, y);
+// } 
+function move(square, checker){
     let a = checker.getAttribute('position')
     let b = square.getAttribute('position')
     let x = a[0] - b[0];
     let y = a[2] - b[2];
-    move(square, checker, x, y);
-} 
-function move(square, checker, x, y){
-    if(checker.getAttribute('player') === 'red' || checker.classList.contains('red-king') || checker.classList.contains('black-king')){
+   
+    if(checker.getAttribute('player') === 'red' || checker.classList.contains('king')){
         if((moves.redMove.x[0] === x && moves.redMove.x[1] === y) || moves.redMove.y[0] === x && moves.redMove.y[1] === y){
-            checker.setAttribute('position', square.attributes.position.value)
-            square.setAttribute('occupied', true)
-            checker.parentElement.setAttribute('occupied', false)
-            square.appendChild(checker);
-            isKing(checker);
-            selectedPieceArray = [];
-        }
-    } 
-    if(checker.getAttribute('player') === 'black' || checker.classList.contains('red-king') || checker.classList.contains('black-king')){
-        if((moves.blackMove.x[0] === x && moves.blackMove.x[1] === y) || moves.blackMove.y[0] === x && moves.blackMove.y[1] === y){
-            checker.setAttribute('position', square.attributes.position.value)
-            checker.parentElement.setAttribute('occupied', false)
-            square.setAttribute('occupied', true)
-            square.appendChild(checker);
-            isKing(checker);
-            selectedPieceArray = [];
-        }else{
-            return selectedPieceArray = [];
+            attributes(checker, square)
         }
     }
+    if(checker.getAttribute('player') === 'black' || checker.classList.contains('king')){
+        if((moves.blackMove.x[0] === x && moves.blackMove.x[1] === y) || moves.blackMove.y[0] === x && moves.blackMove.y[1] === y){
+           attributes(checker, square);
+        }
+    }
+    clearSelection();
 }  
-
+function attributes(checker, square){
+    checker.setAttribute('position', square.attributes.position.value)
+    checker.parentElement.setAttribute('occupied', false)
+    square.setAttribute('occupied', true)
+    square.appendChild(checker);
+    isKing(checker);
+    render();
+}
 //render calls most states of teh board for porper displaying and resetting of some variables
 function render(){
-    changeTurn();
     renderScores();
-    displayTurn();
+    adjustTurn();
     getWinner();
-    selectedPieceArray = [];
-    pieceSelected = false;
+    clearSelection();
 }
-
+function clearSelection(){
+    pieceSelected = false;
+    selectedPieceArray = [];
+}
 //messages and info for displaying turn
-function displayTurn(){
+function adjustTurn(){
+    if(playerTurn === scores.player1){
+        playerTurn = scores.player2;
+    }else{
+        playerTurn = scores.player1;
+    };
     if(playerTurn === scores.player1){
         message.innerHTML = `Player 1, it's your turn!`
     }
     if(playerTurn === scores.player2){
         message.innerHTML = `Player 2, it's your turn!`
-    }
+    };
 }
 
 //messages for displaying winner and setting winner to not null
@@ -264,22 +233,6 @@ function getWinner(){
     }
 }
 
-//changes the player turn
-function changeTurn(){
-    if(playerTurn === scores.player1){
-        playerTurn = scores.player2;
-    }else{
-        playerTurn = scores.player1;
-    };
-}
-
-//button click to create pieces and init the board state
-function play(){
-    removeCheckers();
-    resetScores();
-    init(); 
-}
-
 //resets scores to initial value
 function resetScores(){
     scores.redPieceCount = 12;
@@ -288,6 +241,7 @@ function resetScores(){
     scores.redPiecesTaken = 0;
     scores.winner = null;
 }
+
 function changeScore(checkerJumping){
     if(checkerJumping[0].getAttribute('player') === 'red'){
         scores.blackPiecesTaken += 1;
@@ -313,7 +267,6 @@ function setBoard(){
         boardSquares[i].addEventListener('click', selectSquare)
         boardSquares[i].setAttribute('occupied', false)
     }
-
 }
 
 //maps scores to HTML
@@ -353,19 +306,15 @@ function createCheckers(){
         boardSquares[i].setAttribute('occupied', true);
     }
 }
-
+//button click to create pieces and init the board state
+function play(){
+    removeCheckers();
+    resetScores();
+    init(); 
+}
 //logic for determining if checker becomes a king
 function isKing(checker){
-    const kingCheck = checker
-    if(kingCheck.getAttribute('player') === 'red'){
-            if(parseInt(kingCheck.getAttribute('position')[0]) === 8){
-                kingCheck.classList.add('red-king');
-            }
-        }
-    if(kingCheck.getAttribute('player') === 'black'){
-            if(parseInt(kingCheck.getAttribute('position')[0]) === 1){
-                kingCheck.classList.add('black-king'); 
-            }
-        }
-    
+    if(((checker.getAttribute('player') === 'red') && (parseInt(checker.getAttribute('position')[0]) === 8)) || ((checker.getAttribute('player') === 'black') && (parseInt(checker.getAttribute('position')[0]) === 1))){
+        checker.classList.add('king');
+    }
 }
