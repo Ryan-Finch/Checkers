@@ -89,7 +89,8 @@ function selectSquare(evt){
     if(targetPiece){targetPiece.classList.remove('selected')}
     clearSelection();
 }
-//These are all the jump funtcions, red and black get the information needed and then call jump function for jump. King Jump calls both red and black jump
+
+//These are all the jump functions,readyJump pulls positioning and then sends to jump which sorts through its conditionals to restrict movement. passes the info to landing which sets all the new attributes for checkers and squares
 function readyJump(checkerToJump, checkerJumping){
     const checker = checkerJumping[0];
     
@@ -149,27 +150,9 @@ function landing(boardSquares,checkerToJump, checkerJumping){
     changeScore(checkerJumping)
     checkerJumping[0].classList.remove('selected')
     render();
-    return;
 }
-//These are the move functions, red and black feed needed info to move. King move calls both red and black move functions
-// function kingMove(square, checker){
-//     redMove(square, checker);
-//     blackMove(square ,checker);
-// }
-// function redMove(square, checker){
-//     let a = checker.getAttribute('position')
-//     let b = square.getAttribute('position')
-//     let x = a[0] - b[0];
-//     let y = a[2] - b[2]; 
-//    move(square, checker, x, y);
-// }
-// function blackMove(square, checker){
-//     let a = checker.getAttribute('position')
-//     let b = square.getAttribute('position')
-//     let x = a[0] - b[0];
-//     let y = a[2] - b[2];
-//     move(square, checker, x, y);
-// } 
+
+//Move takes information from the event listeners and deteremines what moves can be made. attributes  changes all attributes of affected variables
 function move(square, checker){
     let a = checker.getAttribute('position')
     let b = square.getAttribute('position')
@@ -196,6 +179,7 @@ function attributes(checker, square){
     isKing(checker);
     render();
 }
+
 //render calls most states of teh board for porper displaying and resetting of some variables
 function render(){
     renderScores();
@@ -203,11 +187,14 @@ function render(){
     getWinner();
     clearSelection();
 }
+
+//clears out variables for moving pieces, to ensure your selection isnt stuck on one piece.
 function clearSelection(){
     pieceSelected = false;
     selectedPieceArray = [];
 }
-//messages and info for displaying turn
+
+//messages for displaying turn and changes turn
 function adjustTurn(){
     if(playerTurn === scores.player1){
         playerTurn = scores.player2;
@@ -226,10 +213,10 @@ function adjustTurn(){
 function getWinner(){
     if(scores.redPieceCount === 0){
         scores.winner = scores.player2;
-        message.innerHTML = `Winner is Player 2!!`
+        message.innerHTML = `Player 2 Wins!!`
     }else if(scores.blackPieceCount === 0){
         scores.winner = scores.player1;
-        message.innerHTML = `Winner is Player 1!!`
+        message.innerHTML = `Player 1 Wins!!`
     }
 }
 
@@ -242,6 +229,7 @@ function resetScores(){
     scores.winner = null;
 }
 
+//changes teh scores for rendering in the HTML
 function changeScore(checkerJumping){
     if(checkerJumping[0].getAttribute('player') === 'red'){
         scores.blackPiecesTaken += 1;
@@ -251,6 +239,7 @@ function changeScore(checkerJumping){
         scores.redPieceCount -= 1;
     }
 }
+
 //As it says, initializes the board and HTML
 function init(){
     renderScores();
@@ -277,7 +266,7 @@ function renderScores(){
     scoreElements.rpTaken.innerText = scores.redPiecesTaken;
 }
 
-//remoevs all checkers from teh board for re-initializing game for replay
+//remoevs all checkers from the board for re-initializing game for replay
 function removeCheckers(){
     let element = document.querySelectorAll('.checker')
         element.forEach(el => {
@@ -294,7 +283,8 @@ function createCheckers(){
         checker.setAttribute('player', redCheckers.player)
         checker.setAttribute('position', checkerBoard[i])
         checker.addEventListener('click', checkerSelection)
-        boardSquares[i].setAttribute('occupied', true);        
+        boardSquares[i].setAttribute('occupied', true);  
+        checker.classList.add('checker')      
     }
     for(let i = 20; i < 32; i++){
         const checker = document.createElement('div'); 
@@ -304,15 +294,18 @@ function createCheckers(){
         checker.setAttribute('position',checkerBoard[i] )
         checker.addEventListener('click', checkerSelection)
         boardSquares[i].setAttribute('occupied', true);
+        checker.classList.add('checker')
     }
 }
+
 //button click to create pieces and init the board state
 function play(){
     removeCheckers();
     resetScores();
     init(); 
 }
-//logic for determining if checker becomes a king
+
+//logic for determining if checker becomes a king by its positioning on last row
 function isKing(checker){
     if(((checker.getAttribute('player') === 'red') && (parseInt(checker.getAttribute('position')[0]) === 8)) || ((checker.getAttribute('player') === 'black') && (parseInt(checker.getAttribute('position')[0]) === 1))){
         checker.classList.add('king');

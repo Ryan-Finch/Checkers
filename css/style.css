@@ -38,7 +38,6 @@ h4{
     grid-column: 3/3;
     text-align: center;
 }
-
 #game-board {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -49,10 +48,8 @@ h4{
     justify-content: center;
     border: 10px solid black;
     grid-row: 2/3;
-    grid-column: 2/3;
-   
+    grid-column: 2/3;  
 }
-
 .white-board-square{
     background-color: burlywood;
     display: grid;
