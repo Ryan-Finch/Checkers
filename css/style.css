@@ -40,7 +40,7 @@ h4{
     align-self: center;
     border: 5px outset white;
     width: 15vw;  
-    height: 70vh;
+    height: 60vh;
     background-color:slategray;  
 }
 #player2{
@@ -51,7 +51,7 @@ h4{
     text-align: center;
     border: 5px outset white; 
     width: 15vw;
-    height: 70vh;
+    height: 60vh;
     background-color: slategrey;
 }
 #game-board {
@@ -148,7 +148,7 @@ h4{
 
 @media only screen and (max-height: 420px){
     #game-board{
-        height: 85vh;
+        height: 90vh;
         width: 65vw;
     }
 }
