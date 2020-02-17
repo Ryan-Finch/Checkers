@@ -131,8 +131,8 @@ body{
     grid-template-columns: 1fr auto 1fr;
 }
     #game-board{
-    height: 700px;
-    width: 700px;
+    height: 900px;
+    width: 900px;
 }
 h1{
     font-size: 60px;
