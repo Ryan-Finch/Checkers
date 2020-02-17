@@ -131,8 +131,8 @@ body{
     grid-template-columns: 1fr auto 1fr;
 }
     #game-board{
-    height: 900px;
-    width: 900px;
+    height: 700px;
+    width: 700px;
 }
 h1{
     font-size: 60px;
@@ -152,10 +152,6 @@ h4{
         width: 65vw;
     }
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> master
 
 
 /* Animation FUN */
