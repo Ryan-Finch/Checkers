@@ -70,9 +70,12 @@ function checkerSelection(evt){
     evt.stopImmediatePropagation();
     const target = evt.target;
     
+    if((target.attributes.player.value === playerTurn) && (pieceSelected === true)) {
+        selectedPieceArray[0].classList.remove('selected')
+    }
     if((target.attributes.player.value !== playerTurn) && (pieceSelected === true)){
         readyJump(target, selectedPieceArray);
-        
+        return;
     }else clearSelection();
 
     if(target.attributes.player.value !== playerTurn) return
@@ -103,8 +106,7 @@ function readyJump(checkerToJump, checkerJumping){
         const coordinateX1 = moves.redJump.y[0] + parseInt(x);
         const coordinateY1= moves.redJump.y[1] + parseInt(y);
         jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump,checkerJumping);
-    }
-    if(checker.classList.contains('black-checker') || checker.classList.    contains('king')){
+    }else if(checker.classList.contains('black-checker') || checker.classList.    contains('king')){
         const a = checkerToJump.getAttribute('position');
         const x = a[0];
         const y = a[2];
@@ -144,11 +146,16 @@ function landing(boardSquares,checkerToJump, checkerJumping){
     checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value);
     checkerJumping[0].parentElement.setAttribute('occupied', false);
     tarSqr.setAttribute('occupied', true);
-    checkerToJump.remove(checkerToJump);
+    checkerToJump.classList.add('removed-item')
+    setTimeout(function(){
+        checkerToJump.remove(checkerToJump);
+    }, 1000)
+    console.log('king')
     tarSqr.appendChild(checkerJumping[0]);
     isKing(checkerJumping[0]);
     changeScore(checkerJumping)
     checkerJumping[0].classList.remove('selected')
+    
     render();
 }
 
@@ -269,33 +276,49 @@ function renderScores(){
 //remoevs all checkers from the board for re-initializing game for replay
 function removeCheckers(){
     let element = document.querySelectorAll('.checker')
-        element.forEach(el => {
-            el.remove(el);        
+        element.forEach(el => { 
+            el.classList.add('removed-item')
+            setInterval(function(){
+                el.remove(el); 
+            }, 1000)        
     });
 }
 
 //creates all checekers for board and gives need attributes and event listeners
 function createCheckers(){
-    for(let i = 0; i < 12; i++){
-        const checker = document.createElement('div'); 
-        boardSquares[i].appendChild(checker);
-        checker.setAttribute('class', redCheckers.class)
-        checker.setAttribute('player', redCheckers.player)
-        checker.setAttribute('position', checkerBoard[i])
-        checker.addEventListener('click', checkerSelection)
-        boardSquares[i].setAttribute('occupied', true);  
-        checker.classList.add('checker')      
-    }
-    for(let i = 20; i < 32; i++){
-        const checker = document.createElement('div'); 
-        boardSquares[i].appendChild(checker);
-        checker.setAttribute('class',  blackCheckers.class);
-        checker.setAttribute('player', blackCheckers.player);
-        checker.setAttribute('position',checkerBoard[i] )
-        checker.addEventListener('click', checkerSelection)
-        boardSquares[i].setAttribute('occupied', true);
-        checker.classList.add('checker')
-    }
+    setTimeout(function(){
+        for(let i = 0; i < 12; i++){
+            const checker = document.createElement('div'); 
+            boardSquares[i].appendChild(checker);
+            checker.setAttribute('class', redCheckers.class)
+            checker.setAttribute('player', redCheckers.player)
+            checker.setAttribute('position', checkerBoard[i])
+            checker.addEventListener('click', checkerSelection)
+            boardSquares[i].setAttribute('occupied', true);  
+            checker.classList.add('checker')    
+            setInterval(function(){
+                checker.style.margin = '5px'
+                checker.style.marginLeft = '0';
+            }, 100);
+        }
+    }, 1000)
+
+    setTimeout(function(){
+        for(let i = 20; i < 32; i++){
+            const checker = document.createElement('div'); 
+            boardSquares[i].appendChild(checker);
+            checker.setAttribute('class',  blackCheckers.class);
+            checker.setAttribute('player', blackCheckers.player);
+            checker.setAttribute('position',checkerBoard[i] )
+            checker.addEventListener('click', checkerSelection)
+            boardSquares[i].setAttribute('occupied', true);
+            checker.classList.add('checker');
+            setInterval(function(){
+                checker.style.margin = '5px'
+                checker.style.marginLeft = '0';
+            }, 100);
+        }
+    }, 1000)
 }
 
 //button click to create pieces and init the board state
