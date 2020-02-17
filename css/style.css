@@ -146,6 +146,12 @@ h4{
 
 }
 
+@media only screen and (max-height: 420px){
+    #game-board{
+        height: 85vh;
+        width: 65vw;
+    }
+}
 
 
 
