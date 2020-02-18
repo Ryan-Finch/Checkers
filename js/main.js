@@ -75,7 +75,7 @@ function checkerSelection(evt){
     }
     if((target.attributes.player.value !== playerTurn) && (pieceSelected === true)){
         readyJump(target, selectedPieceArray);
-        
+       
     }else clearSelection();
 
     if(target.attributes.player.value !== playerTurn) return
@@ -106,7 +106,8 @@ function readyJump(checkerToJump, checkerJumping){
         const coordinateX1 = moves.redJump.y[0] + parseInt(x);
         const coordinateY1= moves.redJump.y[1] + parseInt(y);
         jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump,checkerJumping);
-    }else if(checker.classList.contains('black-checker') || checker.classList.contains('king')){
+    }
+    if(checker.classList.contains('black-checker') || checker.classList.    contains('king')){
         const a = checkerToJump.getAttribute('position');
         const x = a[0];
         const y = a[2];
@@ -132,11 +133,8 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
         }
         if((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX1) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY1) && (boardSquares[i].attributes.occupied.value !== 'true')){
             if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])) {
-                console.log('....')
                 if((parseInt(boardSquares[i].getAttribute('position')[0]) === parseInt(checkerJumping[0].getAttribute('position')[0]) + 2) || (parseInt(boardSquares[i].getAttribute('position')[0]) === parseInt(checkerJumping[0].getAttribute('position')[0]) - 2)){
-                    console.log('...........')
                     if((parseInt(boardSquares[i].getAttribute('position')[2]) === (parseInt(checkerJumping[0].getAttribute('position')[2]) + 2)) || (parseInt(boardSquares[i].getAttribute('position')[2]) === (parseInt(checkerJumping[0].getAttribute('position')[2]) - 2))){
-                        console.log('king jump')
                         landing(boardSquares[i],checkerToJump, checkerJumping);
                     }
                 }
@@ -147,18 +145,18 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
 function landing(boardSquares,checkerToJump, checkerJumping){
     const tarSqr = boardSquares;
     checkerToJump.parentElement.setAttribute('occupied', false);
+    console.log( checkerToJump.parentElement)
     checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value);
     checkerJumping[0].parentElement.setAttribute('occupied', false);
     tarSqr.setAttribute('occupied', true);
     checkerToJump.classList.add('removed-item')
-    setTimeout(function(){
+    // setTimeout(function(){
         checkerToJump.remove(checkerToJump);
-    }, 1000)
+    // }, 500)
     tarSqr.appendChild(checkerJumping[0]);
     isKing(checkerJumping[0]);
     changeScore(checkerJumping)
     checkerJumping[0].classList.remove('selected')
-    console.log('wtf....')
     render();
 }
 
@@ -279,12 +277,12 @@ function renderScores(){
 //remoevs all checkers from the board for re-initializing game for replay
 function removeCheckers(){
     let element = document.querySelectorAll('.checker')
-        element.forEach(el => { 
-            el.classList.add('removed-item')
-            setInterval(function(){
-                el.remove(el); 
-            }, 1000)        
-    });
+    element.forEach(el => { 
+        el.classList.add('removed-item')
+        setInterval(function(){
+            el.remove(el); 
+        }, 1000)        
+});
 }
 
 //creates all checekers for board and gives need attributes and event listeners
