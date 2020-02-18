@@ -75,7 +75,7 @@ function checkerSelection(evt){
     }
     if((target.attributes.player.value !== playerTurn) && (pieceSelected === true)){
         readyJump(target, selectedPieceArray);
-       
+       return;
     }else clearSelection();
 
     if(target.attributes.player.value !== playerTurn) return
@@ -127,15 +127,16 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
                     if((parseInt(boardSquares[i].getAttribute('position')[2]) === (parseInt(checkerJumping[0].getAttribute('position')[2]) + 2)) || (parseInt(boardSquares[i].getAttribute('position')[2]) === (parseInt(checkerJumping[0].getAttribute('position')[2]) - 2))){
                         
                         landing(boardSquares[i],checkerToJump, checkerJumping);
+                        return;
                      }
                 }
             }
-        }
-        if((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX1) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY1) && (boardSquares[i].attributes.occupied.value !== 'true')){
+        }else if((parseInt(boardSquares[i].getAttribute('position')[0]) === coordinateX1) && (parseInt(boardSquares[i].getAttribute('position')[2]) === coordinateY1) && (boardSquares[i].attributes.occupied.value !== 'true')){
             if(parseInt(boardSquares[i].getAttribute('position')[2]) !== parseInt(checkerJumping[0].getAttribute('position')[2])) {
                 if((parseInt(boardSquares[i].getAttribute('position')[0]) === parseInt(checkerJumping[0].getAttribute('position')[0]) + 2) || (parseInt(boardSquares[i].getAttribute('position')[0]) === parseInt(checkerJumping[0].getAttribute('position')[0]) - 2)){
                     if((parseInt(boardSquares[i].getAttribute('position')[2]) === (parseInt(checkerJumping[0].getAttribute('position')[2]) + 2)) || (parseInt(boardSquares[i].getAttribute('position')[2]) === (parseInt(checkerJumping[0].getAttribute('position')[2]) - 2))){
                         landing(boardSquares[i],checkerToJump, checkerJumping);
+                        return;
                     }
                 }
             }
@@ -145,19 +146,21 @@ function jump(coordinateX,coordinateX1,coordinateY,coordinateY1,checkerToJump, c
 function landing(boardSquares,checkerToJump, checkerJumping){
     const tarSqr = boardSquares;
     checkerToJump.parentElement.setAttribute('occupied', false);
-    console.log( checkerToJump.parentElement)
     checkerJumping[0].setAttribute('position', tarSqr.attributes.position.value);
     checkerJumping[0].parentElement.setAttribute('occupied', false);
     tarSqr.setAttribute('occupied', true);
-    checkerToJump.classList.add('removed-item')
+    checkerToJump.classList.add('removed-item');
     // setTimeout(function(){
         checkerToJump.remove(checkerToJump);
     // }, 500)
+    console.log('k2')
     tarSqr.appendChild(checkerJumping[0]);
     isKing(checkerJumping[0]);
-    changeScore(checkerJumping)
-    checkerJumping[0].classList.remove('selected')
+    changeScore(checkerJumping);
+    checkerJumping[0].classList.remove('selected');
     render();
+    return;
+    
 }
 
 //Move takes information from the event listeners and deteremines what moves can be made. attributes  changes all attributes of affected variables
